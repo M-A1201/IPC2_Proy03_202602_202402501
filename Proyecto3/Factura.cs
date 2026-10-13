@@ -2,7 +2,8 @@ using System;
 
 public class Factura
 {
-    private string fecha; // Lo manejamos como string para capturar tal cual viene del JSON (ej. "Guatemala, 15/01/2025 15:25 hrs.") o DateTime si prefieres parsearlo
+    // Atributos privados
+    private string fecha;
     private string referencia;
     private string nitEmisor;
     private string nitReceptor;
@@ -10,5 +11,58 @@ public class Factura
     private decimal iva;
     private decimal total;
 
-    // Constructor y propiedades aquí...
+    // Constructor (opcional para inicializar los datos)
+    public Factura(string fecha, string referencia, string nitEmisor, string nitReceptor, decimal valor, decimal iva, decimal total)
+    {
+        this.fecha = fecha;
+        this.referencia = referencia;
+        this.nitEmisor = nitEmisor;
+        this.nitReceptor = nitReceptor;
+        this.valor = valor;
+        this.iva = iva;
+        this.total = total;
+    }
+
+    // Propiedades públicas (Getters y Setters) que resuelven el error
+    public string Fecha 
+    { 
+        get { return fecha; } 
+        set { fecha = value; } 
+    }
+
+    public string Referencia 
+    { 
+        get { return referencia; } 
+        set { referencia = value; } 
+    }
+
+    public string NitEmisor 
+    { 
+        get { return nitEmisor; } 
+        set { nitEmisor = value; } 
+    }
+
+    public string NitReceptor 
+    { 
+        get { return nitReceptor; } 
+        set { nitReceptor = value; } 
+    }
+
+    public decimal Valor 
+    { 
+        get { return valor; } 
+        set { valor = value; } 
+    }
+
+    public decimal Iva 
+    { 
+        get { return iva; } 
+        set { iva = value; } 
+    }
+
+    public decimal Total 
+    { 
+        get { return total; } 
+        set { total = value; } 
+    }
 }

@@ -3,6 +3,13 @@ using System.Collections.Generic;
 
 public class RegistroRTU
 {
+
+    //metodo 
+    public bool ExisteNit(string nit)
+{
+    return listaContribuyentes.Exists(c => c.Nit == nit);
+}
+
     // Lista interna para almacenar los contribuyentes (nuestro RTU en memoria)
     private List<Contribuyente> listaContribuyentes = new List<Contribuyente>();
 
