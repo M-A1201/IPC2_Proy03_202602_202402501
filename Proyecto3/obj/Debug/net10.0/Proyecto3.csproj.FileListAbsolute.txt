@@ -12,3 +12,4 @@ C:\Users\Manuel\Desktop\Practicas,Proyecto de IPC2\Proyectos\IPC2_Proy03_202602_
 C:\Users\Manuel\Desktop\Practicas,Proyecto de IPC2\Proyectos\IPC2_Proy03_202602_202402501\Proyecto3\Proyecto3\obj\Debug\net10.0\Proyecto3.pdb
 C:\Users\Manuel\Desktop\Practicas,Proyecto de IPC2\Proyectos\IPC2_Proy03_202602_202402501\Proyecto3\Proyecto3\obj\Debug\net10.0\Proyecto3.genruntimeconfig.cache
 C:\Users\Manuel\Desktop\Practicas,Proyecto de IPC2\Proyectos\IPC2_Proy03_202602_202402501\Proyecto3\Proyecto3\obj\Debug\net10.0\ref\Proyecto3.dll
+C:\Users\Manuel\Desktop\Practicas,Proyecto de IPC2\Proyectos\IPC2_Proy03_202602_202402501\Proyecto3\Proyecto3\obj\Debug\net10.0\Proyecto3.sourcelink.json
