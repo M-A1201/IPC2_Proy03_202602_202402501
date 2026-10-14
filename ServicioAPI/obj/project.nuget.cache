@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "smOLU2lVrag=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Manuel\\Desktop\\Practicas,Proyecto de IPC2\\Proyectos\\IPC2_Proy03_202602_202402501\\ServicioAPI\\ServicioAPI.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Manuel\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.12\\microsoft.aspnetcore.openapi.10.0.12.nupkg.sha512",
+    "C:\\Users\\Manuel\\.nuget\\packages\\microsoft.openapi\\2.12.0\\microsoft.openapi.2.12.0.nupkg.sha512"
+  ],
+  "logs": []
+}
