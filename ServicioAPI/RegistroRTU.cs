@@ -45,8 +45,28 @@ public class RegistroRTU
                 contActualizados++;
             }
         }
+// 3. Devolver la respuesta exactamente con la estructura requerida por el enunciado
+        string jsonRespuesta = $"{{\n  \"CONTRIBUYENTES NUEVOS\": {contNuevos},\n  \"CONTRIBUYENTES ACTUALIZADOS\": {contActualizados},\n  \"NITS INVALIDOS\": {contInvalidos}\n}}";
 
-        // 3. Devolver la respuesta exactamente con la estructura requerida por el enunciado
-        return $"{{\n  \"CONTRIBUYENTES NUEVOS\": {contNuevos},\n  \"CONTRIBUYENTES ACTUALIZADOS\": {contActualizados},\n  \"NITS INVALIDOS\": {contInvalidos}\n}}";
+        // === NUEVO: GUARDAR EL RTU EN UN ARCHIVO LOCAL ===
+        try
+        {
+            // Convertimos nuestra lista de contribuyentes a texto plano (JSON básico)
+            List<string> lineasContribuyentes = new List<string>();
+            foreach (var c in listaContribuyentes)
+            {
+                lineasContribuyentes.Add($"{{\"NIT\": \"{c.Nit}\", \"nombre\": \"{c.Nombre}\"}}");
+            }
+            string contenidoArchivo = "[\n" + string.Join(",\n", lineasContribuyentes) + "\n]";
+            
+            // Guarda el archivo en la carpeta del proyecto
+            System.IO.File.WriteAllText("rtu_datos.json", contenidoArchivo);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error al guardar el archivo RTU: " + ex.Message);
+        }
+
+        return jsonRespuesta;
     }
 }

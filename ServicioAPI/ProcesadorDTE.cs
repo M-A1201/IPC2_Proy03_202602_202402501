@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class ProcesadorDTE
 {
-    private RegistroRTU rtuRegistrado; 
+    private RegistroRTU rtuRegistrado;
     private int correlativoActual = 1;
     private string fechaUltimoCorrelativo = "";
 
@@ -18,10 +18,10 @@ public class ProcesadorDTE
         int aprobadas = 0;
         int rechazadasEmisorInexistente = 0;
         int rechazadasReceptorInexistente = 0;
-        
+
         // Lista para controlar referencias únicas dentro del lote y evitar duplicados
         HashSet<string> referenciasProcesadas = new HashSet<string>();
-        
+
         // Lista para guardar el detalle de las aprobaciones que exige el JSON de respuesta
         List<string> detalleAprobaciones = new List<string>();
 
@@ -31,7 +31,7 @@ public class ProcesadorDTE
             if (!ValidadorNit.EsValido(factura.NitEmisor) || !ValidadorNit.EsValido(factura.NitReceptor))
             {
                 // Aquí puedes contar los NITs inválidos si deseas
-                continue; 
+                continue;
             }
 
             // PASO 2: Verificar si los NITs existen en el RTU 
@@ -73,7 +73,7 @@ public class ProcesadorDTE
             // PASO 5: Generar el número de autorización (yyyymmdd########)
             // Extraemos la fecha de la factura o usamos la fecha actual del sistema para el correlativo
             string fechaStr = DateTime.Now.ToString("yyyyMMdd"); // Formato yyyymmdd para el inicio del código
-            
+
             if (fechaStr != fechaUltimoCorrelativo)
             {
                 fechaUltimoCorrelativo = fechaStr;
@@ -92,7 +92,7 @@ public class ProcesadorDTE
         string detallesJson = string.Join(",\n", detalleAprobaciones);
 
         // PASO 6: Retornar el JSON con el formato exacto requerido por el enunciado
-        return $@"{{
+        string jsonResultado = $@"{{
   ""resultadoAutorizaciones"": {{
     ""cantidadAutorizacionesAprobadas"": {aprobadas},
     ""cantidadAutorizacionesRechazadasPorNitEmisorInexistente"": {rechazadasEmisorInexistente},
@@ -102,5 +102,18 @@ public class ProcesadorDTE
     ]
   }}
 }}";
+
+        // === NUEVO: GUARDAR EL RESULTADO DE FACTURAS EN UN ARCHIVO LOCAL ===
+        try
+        {
+            // Guardamos el resultado de las autorizaciones en un archivo de respaldo
+            System.IO.File.WriteAllText("facturas_procesadas.json", jsonResultado);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error al guardar el archivo de facturas: " + ex.Message);
+        }
+
+        return jsonResultado;
     }
 }

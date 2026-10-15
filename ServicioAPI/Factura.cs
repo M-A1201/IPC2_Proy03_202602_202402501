@@ -1,8 +1,8 @@
 using System;
+using System.Text.Json.Serialization;
 
 public class Factura
 {
-    // Atributos privados
     private string fecha;
     private string referencia;
     private string nitEmisor;
@@ -11,7 +11,6 @@ public class Factura
     private decimal iva;
     private decimal total;
 
-    // Constructor (opcional para inicializar los datos)
     public Factura(string fecha, string referencia, string nitEmisor, string nitReceptor, decimal valor, decimal iva, decimal total)
     {
         this.fecha = fecha;
@@ -23,43 +22,49 @@ public class Factura
         this.total = total;
     }
 
-    // Propiedades públicas (Getters y Setters) que resuelven el error
+    [JsonPropertyName("TIEMPO")]
     public string Fecha 
     { 
         get { return fecha; } 
         set { fecha = value; } 
     }
 
+    [JsonPropertyName("REFERENCIA")]
     public string Referencia 
     { 
         get { return referencia; } 
         set { referencia = value; } 
     }
 
+    [JsonPropertyName("NIT EMISOR")]
     public string NitEmisor 
     { 
         get { return nitEmisor; } 
         set { nitEmisor = value; } 
     }
 
+    [JsonPropertyName("NIT RECEPTOR")]
     public string NitReceptor 
     { 
         get { return nitReceptor; } 
         set { nitReceptor = value; } 
     }
 
+    [JsonPropertyName("VALOR")]
     public decimal Valor 
     { 
         get { return valor; } 
         set { valor = value; } 
     }
 
+    [JsonPropertyName("IVA")]
     public decimal Iva 
     { 
         get { return iva; } 
         set { iva = value; } 
     }
 
+    [JsonPropertyName("TOTAL")]
     public decimal Total 
     { 
         get { return total; } 
