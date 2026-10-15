@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 
 // 2. Registramos nuestro servicio ApiServicio para que esté disponible en las páginas
-builder.Services.AddTransient<ApiServicio>();
+builder.Services.AddHttpClient<ApiServicio>();
 
 var app = builder.Build();
 
