@@ -49,5 +49,11 @@ namespace ServicioFrontend.Pages
             ResultadoApi = await _apiServicio.ProcesarFacturasAsync(JsonInput);
             return Page();
         }
+        // Acción para inicializar el sistema
+        public async Task<IActionResult> OnPostInicializarAsync()
+        {
+            ResultadoApi = await _apiServicio.InicializarSistemaAsync();
+            return Page();
+        }
     }
 }

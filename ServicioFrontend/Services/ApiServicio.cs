@@ -30,5 +30,12 @@ namespace ServicioFrontend.Services
             var response = await _httpClient.PostAsync("api/sat/procesar-facturas", content);
             return await response.Content.ReadAsStringAsync();
         }
+
+        // Método para reiniciar el sistema
+        public async Task<string> InicializarSistemaAsync()
+        {
+            var response = await _httpClient.PostAsync("api/sat/inicializar", null);
+            return await response.Content.ReadAsStringAsync();
+        }
     }
 }

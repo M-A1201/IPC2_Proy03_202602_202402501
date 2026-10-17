@@ -34,4 +34,18 @@ public class SatController : ControllerBase
         string resultado = procesadorDteGlobal.ProcesarSolicitudes(listaFacturas);
         return Content(resultado, "application/json");
     }
+
+    // Endpoint POST para reiniciar/inicializar el sistema
+    [HttpPost("inicializar")]
+    public IActionResult InicializarSistema()
+    {
+        rtuGlobal = new RegistroRTU();
+        procesadorDteGlobal = new ProcesadorDTE(rtuGlobal);
+        
+        // Opcional: limpiar también los archivos locales si deseas
+        if (System.IO.File.Exists("rtu_datos.json")) System.IO.File.Delete("rtu_datos.json");
+        if (System.IO.File.Exists("facturas_procesadas.json")) System.IO.File.Delete("facturas_procesadas.json");
+
+        return Ok(new { mensaje = "Sistema reiniciado al estado inicial correctamente." });
+    }
 }
