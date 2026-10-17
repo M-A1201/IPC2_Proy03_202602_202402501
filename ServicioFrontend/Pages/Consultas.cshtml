@@ -1,0 +1,41 @@
+@page
+@model ConsultasModel
+@{
+    ViewData["Title"] = "Consultas - SAT";
+}
+
+<div class="text-center mb-4">
+    <h1 class="display-4">Módulo de Consultas y Reportes</h1>
+    <p>Consulta facturas emitidas o recibidas por un contribuyente.</p>
+</div>
+
+<div class="row">
+    <div class="col-md-5">
+        <div class="card p-3 shadow-sm">
+            <h4>Consultar Contribuyente</h4>
+            <form method="post">
+                <div class="form-group mb-3">
+                    <label for="Nit"><strong>NIT del Contribuyente:</strong></label>
+                    <input asp-for="Nit" class="form-control" placeholder="Ej. 7378106" />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="Tipo"><strong>Tipo de Facturas:</strong></label>
+                    <select asp-for="Tipo" class="form-control">
+                        <option value="emitidas">Emitidas</option>
+                        <option value="recibidas">Recibidas</option>
+                    </select>
+                </div>
+
+                <button type="submit" asp-page-handler="Consultar" class="btn btn-primary w-100">Buscar Facturas</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <h4>Resultado de la Consulta:</h4>
+        <div class="card bg-light p-3">
+            <pre><code>@Model.ResultadoConsulta</code></pre>
+        </div>
+    </div>
+</div>

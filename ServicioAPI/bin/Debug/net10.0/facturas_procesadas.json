@@ -1,10 +1,10 @@
 {
   "resultadoAutorizaciones": {
-    "cantidadAutorizacionesAprobadas": 1,
-    "cantidadAutorizacionesRechazadasPorNitEmisorInexistente": 0,
+    "cantidadAutorizacionesAprobadas": 0,
+    "cantidadAutorizacionesRechazadasPorNitEmisorInexistente": 1,
     "cantidadAutorizacionesRechazadasPorNitReceptorInexistente": 0,
     "detalleAprobaciones": [
-    {"referencia": "A1990", "codigoAprobacion": 2026101400000001}
+
     ]
   }
 }

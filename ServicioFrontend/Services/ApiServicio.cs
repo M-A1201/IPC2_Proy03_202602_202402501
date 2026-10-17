@@ -15,6 +15,7 @@ namespace ServicioFrontend.Services
             _httpClient.BaseAddress = new Uri("http://localhost:5220/");
         }
 
+
         // Método para enviar el JSON de actualización de RTU a la API
         public async Task<string> ActualizarRtuAsync(string jsonContenido)
         {
@@ -35,6 +36,12 @@ namespace ServicioFrontend.Services
         public async Task<string> InicializarSistemaAsync()
         {
             var response = await _httpClient.PostAsync("api/sat/inicializar", null);
+            return await response.Content.ReadAsStringAsync();
+        }
+        // Método para consultar facturas por NIT y tipo (emitidas/recibidas)
+        public async Task<string> ConsultarDatosAsync(string nit, string tipo)
+        {
+            var response = await _httpClient.GetAsync($"api/sat/consulta-datos?nit={nit}&tipo={tipo}");
             return await response.Content.ReadAsStringAsync();
         }
     }

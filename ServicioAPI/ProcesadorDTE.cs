@@ -1,11 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class ProcesadorDTE
 {
-    private RegistroRTU rtuRegistrado;
+    private RegistroRTU rtuRegistrado; 
     private int correlativoActual = 1;
     private string fechaUltimoCorrelativo = "";
+
+    // Lista acumulativa para el historial de facturas aprobadas
+    private static List<Factura> historialFacturasAprobadas = new List<Factura>();
 
     // Constructor
     public ProcesadorDTE(RegistroRTU rtu)
@@ -13,29 +17,39 @@ public class ProcesadorDTE
         this.rtuRegistrado = rtu;
     }
 
+    // Método para obtener el historial completo
+    public List<Factura> ObtenerHistorial()
+    {
+        // Si la lista en memoria está vacía, intentamos recuperarla del archivo de respaldo si existe
+        return historialFacturasAprobadas;
+    }
+
+    // Método para reiniciar el historial si se presiona "Inicializar"
+    public void LimpiarHistorial()
+    {
+        historialFacturasAprobadas.Clear();
+        correlativoActual = 1;
+        fechaUltimoCorrelativo = "";
+    }
+
     public string ProcesarSolicitudes(List<Factura> listaFacturas)
     {
         int aprobadas = 0;
         int rechazadasEmisorInexistente = 0;
         int rechazadasReceptorInexistente = 0;
-
-        // Lista para controlar referencias únicas dentro del lote y evitar duplicados
+        
         HashSet<string> referenciasProcesadas = new HashSet<string>();
-
-        // Lista para guardar el detalle de las aprobaciones que exige el JSON de respuesta
         List<string> detalleAprobaciones = new List<string>();
 
         foreach (var factura in listaFacturas)
         {
-            // PASO 1: Validar si el NIT Emisor y Receptor son válidos con el Módulo 11
+            // 1. Validar si el NIT Emisor y Receptor son válidos con el Módulo 11
             if (!ValidadorNit.EsValido(factura.NitEmisor) || !ValidadorNit.EsValido(factura.NitReceptor))
             {
-                // Aquí puedes contar los NITs inválidos si deseas
-                continue;
+                continue; 
             }
 
-            // PASO 2: Verificar si los NITs existen en el RTU 
-            // (Asumiremos que RegistroRTU tiene un método ExisteNit(string nit))
+            // 2. Verificar si los NITs existen en el RTU 
             bool emisorExiste = rtuRegistrado.ExisteNit(factura.NitEmisor);
             bool receptorExiste = rtuRegistrado.ExisteNit(factura.NitReceptor);
 
@@ -51,47 +65,45 @@ public class ProcesadorDTE
                 continue;
             }
 
-            // PASO 3: Validar los cálculos matemáticos (IVA y Total)
-            // REDONDEAR(VALOR * 0.12, 2)
+            // 3. Validar los cálculos matemáticos (IVA y Total)
             decimal ivaCalculado = Math.Round(factura.Valor * 0.12m, 2);
             decimal totalCalculado = factura.Valor + ivaCalculado;
 
             if (factura.Iva != ivaCalculado || factura.Total != totalCalculado)
             {
-                // Error de cálculo en IVA o Total
                 continue;
             }
 
-            // PASO 4: Validar que la referencia no esté duplicada
-            if (referenciasProcesadas.Contains(factura.Referencia))
+            // 4. Validar que la referencia no esté duplicada en este lote ni en el historial
+            if (referenciasProcesadas.Contains(factura.Referencia) || 
+                historialFacturasAprobadas.Any(f => f.Referencia == factura.Referencia))
             {
-                // Referencia duplicada
                 continue;
             }
             referenciasProcesadas.Add(factura.Referencia);
 
-            // PASO 5: Generar el número de autorización (yyyymmdd########)
-            // Extraemos la fecha de la factura o usamos la fecha actual del sistema para el correlativo
-            string fechaStr = DateTime.Now.ToString("yyyyMMdd"); // Formato yyyymmdd para el inicio del código
-
+            // 5. Generar el número de autorización (yyyymmdd########)
+            string fechaStr = DateTime.Now.ToString("yyyyMMdd");
+            
             if (fechaStr != fechaUltimoCorrelativo)
             {
                 fechaUltimoCorrelativo = fechaStr;
-                correlativoActual = 1; // Se reinicia a 1 cada día como pide el enunciado
+                correlativoActual = 1;
             }
 
-            // Formatear el correlativo con 8 dígitos precedidos de ceros (ej. 00000001)
             string codigoAutorizacion = fechaUltimoCorrelativo + correlativoActual.ToString("D8");
             correlativoActual++;
             aprobadas++;
 
-            // Guardamos el detalle para la respuesta JSON
+            // Guardar en el historial en memoria
+            historialFacturasAprobadas.Add(factura);
+
+            // Guardar en el detalle de la respuesta
             detalleAprobaciones.Add($"    {{\"referencia\": \"{factura.Referencia}\", \"codigoAprobacion\": {codigoAutorizacion}}}");
         }
 
         string detallesJson = string.Join(",\n", detalleAprobaciones);
 
-        // PASO 6: Retornar el JSON con el formato exacto requerido por el enunciado
         string jsonResultado = $@"{{
   ""resultadoAutorizaciones"": {{
     ""cantidadAutorizacionesAprobadas"": {aprobadas},
@@ -103,10 +115,8 @@ public class ProcesadorDTE
   }}
 }}";
 
-        // === NUEVO: GUARDAR EL RESULTADO DE FACTURAS EN UN ARCHIVO LOCAL ===
         try
         {
-            // Guardamos el resultado de las autorizaciones en un archivo de respaldo
             System.IO.File.WriteAllText("facturas_procesadas.json", jsonResultado);
         }
         catch (Exception ex)
