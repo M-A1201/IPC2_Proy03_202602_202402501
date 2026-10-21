@@ -1,35 +1,82 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Simulador SAT - Frontend";
+    ViewData["Title"] = "Home - Validación SAT";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Simulador de DTE y RTU - SAT</h1>
-    <p>Gestiona el envío de tus solicitudes hacia la API del Servicio 2.</p>
+<div class="text-center mb-4">
+    <h1 class="display-4">Sistema de Validación DTE / RTU - SAT</h1>
+    <p class="text-muted">Gestión de contribuyentes y procesamiento de documentos tributarios electrónicos.</p>
 </div>
 
-<div class="row mt-4">
-    <div class="col-md-6">
-        <form method="post">
-            <div class="form-group">
-                <label for="JsonInput"><strong>Pega aquí tu mensaje en formato JSON:</strong></label>
-                <textarea asp-for="JsonInput" class="form-control" rows="10" placeholder='Ej. [{"NIT": "7378106", "nombre": "Empresa ABC, S.A."}]'></textarea>
-            </div>
-            
-            <div class="mt-3">
-                <button type="submit" asp-page-handler="ActualizarRtu" class="btn btn-primary">Actualizar RTU</button>
-                <button type="submit" asp-page-handler="ProcesarFacturas" class="btn btn-success">Procesar Facturas (DTE)</button>
-<!-- El botón rojo ahora está dentro del form -->
-<button type="submit" asp-page-handler="Inicializar" class="btn btn-danger">Inicializar (Resetear)</button>
-            </div>
+<div class="row mb-4">
+    <div class="col-md-12 text-end">
+        <form method="post" asp-page-handler="Inicializar" class="d-inline">
+            <button type="submit" class="btn btn-outline-danger" onclick="return confirm('¿Desea reiniciar todo el sistema?');">
+                🔄 Inicializar / Limpiar Sistema
+            </button>
         </form>
     </div>
+</div>
 
-    <div class="col-md-6">
-        <h4>Respuesta de la API:</h4>
-        <div class="card bg-light p-3">
-            <pre><code>@Model.ResultadoApi</code></pre>
+<div class="row">
+    <!-- Carga RTU -->
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">1. Actualización de RTU</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label">Subir Archivo (.json):</label>
+                        <input type="file" name="archivoRtu" class="form-control" accept=".json,.txt" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">O pegar contenido JSON:</label>
+                        <textarea asp-for="InputRtu" class="form-control" rows="5" placeholder='[{"nit": "7378106", "nombre": "Juan Pérez"}]'></textarea>
+                    </div>
+                    <button type="submit" asp-page-handler="ActualizarRtu" class="btn btn-primary w-100">Actualizar RTU</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Carga DTE -->
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-success text-white">
+                <h5 class="card-title mb-0">2. Procesar Facturas DTE</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label">Subir Archivo (.json):</label>
+                        <input type="file" name="archivoDte" class="form-control" accept=".json,.txt" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">O pegar contenido JSON:</label>
+                        <textarea asp-for="InputDte" class="form-control" rows="5" placeholder='[{"referencia": "A1990", ...}]'></textarea>
+                    </div>
+                    <button type="submit" asp-page-handler="ProcesarDte" class="btn btn-success w-100">Procesar Facturas</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
+
+@if (!string.IsNullOrEmpty(Model.ResultadoOperacion))
+{
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="card-title mb-0">Resultado de la Operación:</h5>
+                </div>
+                <div class="card-body">
+                    <pre class="mb-0"><code>@Model.ResultadoOperacion</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ServicioFrontend.Services;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace ServicioFrontend.Pages
@@ -15,44 +17,58 @@ namespace ServicioFrontend.Pages
         }
 
         [BindProperty]
-        public string JsonInput { get; set; } = "";
+        public string InputRtu { get; set; } = "";
 
         [BindProperty]
-        public string ResultadoApi { get; set; } = "";
+        public string InputDte { get; set; } = "";
 
-        public void OnGet()
-        {
-        }
+        public string ResultadoOperacion { get; set; } = "";
 
-        // Acción cuando el usuario le da clic al botón de actualizar RTU
-        public async Task<IActionResult> OnPostActualizarRtuAsync()
+        public void OnGet() { }
+
+        public async Task<IActionResult> OnPostActualizarRtuAsync(IFormFile? archivoRtu)
         {
-            if (string.IsNullOrWhiteSpace(JsonInput))
+            string contenido = InputRtu;
+
+            if (archivoRtu != null && archivoRtu.Length > 0)
             {
-                ResultadoApi = "Por favor ingresa un JSON válido.";
+                using var reader = new StreamReader(archivoRtu.OpenReadStream());
+                contenido = await reader.ReadToEndAsync();
+            }
+
+            if (string.IsNullOrWhiteSpace(contenido))
+            {
+                ResultadoOperacion = "Debes seleccionar un archivo o ingresar datos en el cuadro de texto.";
                 return Page();
             }
 
-            ResultadoApi = await _apiServicio.ActualizarRtuAsync(JsonInput);
+            ResultadoOperacion = await _apiServicio.ActualizarRtuAsync(contenido);
             return Page();
         }
 
-        // Acción cuando el usuario le da clic al botón de procesar facturas
-        public async Task<IActionResult> OnPostProcesarFacturasAsync()
+        public async Task<IActionResult> OnPostProcesarDteAsync(IFormFile? archivoDte)
         {
-            if (string.IsNullOrWhiteSpace(JsonInput))
+            string contenido = InputDte;
+
+            if (archivoDte != null && archivoDte.Length > 0)
             {
-                ResultadoApi = "Por favor ingresa un JSON válido.";
+                using var reader = new StreamReader(archivoDte.OpenReadStream());
+                contenido = await reader.ReadToEndAsync();
+            }
+
+            if (string.IsNullOrWhiteSpace(contenido))
+            {
+                ResultadoOperacion = "Debes seleccionar un archivo o ingresar datos en el cuadro de texto.";
                 return Page();
             }
 
-            ResultadoApi = await _apiServicio.ProcesarFacturasAsync(JsonInput);
+            ResultadoOperacion = await _apiServicio.ProcesarFacturasAsync(contenido);
             return Page();
         }
-        // Acción para inicializar el sistema
+
         public async Task<IActionResult> OnPostInicializarAsync()
         {
-            ResultadoApi = await _apiServicio.InicializarSistemaAsync();
+            ResultadoOperacion = await _apiServicio.InicializarSistemaAsync();
             return Page();
         }
     }

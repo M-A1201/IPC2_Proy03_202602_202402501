@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using ServicioFrontend.Models;
 using ServicioFrontend.Services;
+using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ServicioFrontend.Pages
@@ -20,7 +23,9 @@ namespace ServicioFrontend.Pages
         [BindProperty]
         public string Tipo { get; set; } = "emitidas";
 
-        public string ResultadoConsulta { get; set; } = "";
+        public List<FacturaConsultaDto> ListaFacturas { get; set; } = new List<FacturaConsultaDto>();
+        public string MensajeError { get; set; } = "";
+        public bool BusquedaRealizada { get; set; } = false;
 
         public void OnGet()
         {
@@ -28,13 +33,35 @@ namespace ServicioFrontend.Pages
 
         public async Task<IActionResult> OnPostConsultarAsync()
         {
+            BusquedaRealizada = true;
+
             if (string.IsNullOrWhiteSpace(Nit))
             {
-                ResultadoConsulta = "Por favor, ingresa un NIT para consultar.";
+                MensajeError = "Por favor, ingresa un NIT para realizar la consulta.";
                 return Page();
             }
 
-            ResultadoConsulta = await _apiServicio.ConsultarDatosAsync(Nit, Tipo);
+            try
+            {
+                string jsonRespuesta = await _apiServicio.ConsultarDatosAsync(Nit, Tipo);
+                
+                var opciones = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+
+                var resultado = JsonSerializer.Deserialize<List<FacturaConsultaDto>>(jsonRespuesta, opciones);
+                
+                if (resultado != null)
+                {
+                    ListaFacturas = resultado;
+                }
+            }
+            catch
+            {
+                MensajeError = "Ocurrió un error al procesar los datos de la consulta.";
+            }
+
             return Page();
         }
     }
