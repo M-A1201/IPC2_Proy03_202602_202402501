@@ -5,8 +5,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-// 2. Registramos nuestro servicio ApiServicio para que esté disponible en las páginas
-builder.Services.AddHttpClient<ApiServicio>();
+// 2. Registramos nuestro servicio ApiServicio indicando la URL base de tu ServicioAPI
+builder.Services.AddHttpClient<ApiServicio>(client =>
+{
+    // Asegúrate de colocar el puerto exacto en el que se ejecuta tu ServicioAPI (por ejemplo, 5220)
+    client.BaseAddress = new Uri("http://localhost:5220/");
+});
 
 var app = builder.Build();
 
