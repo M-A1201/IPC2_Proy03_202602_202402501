@@ -1,0 +1,14 @@
+{
+  "resultadoAutorizaciones": {
+    "cantidadAutorizacionesAprobadas": 5,
+    "cantidadAutorizacionesRechazadasPorNitEmisorInexistente": 2,
+    "cantidadAutorizacionesRechazadasPorNitReceptorInexistente": 1,
+    "detalleAprobaciones": [
+    {"referencia": "E01", "codigoAprobacion": 2026102300000001},
+    {"referencia": "E02", "codigoAprobacion": 2026102300000002},
+    {"referencia": "G00001", "codigoAprobacion": 2026102300000003},
+    {"referencia": "E13", "codigoAprobacion": 2026102300000004},
+    {"referencia": "E14", "codigoAprobacion": 2026102300000005}
+    ]
+  }
+}

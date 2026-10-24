@@ -25,9 +25,9 @@ namespace ServicioFrontend.Services
             {
                 if ((int)response.StatusCode == 400)
                 {
-                    return "⚠️ Error de sintaxis o formato en el JSON del RTU. Verifica que las llaves {}, comillas y nombres de campos estén correctos.";
+                    return " Error de sintaxis o formato en el JSON del RTU. Verifica que las llaves {}, comillas y nombres de campos estén correctos.";
                 }
-                return $"❌ Error en el servidor (Código {(int)response.StatusCode}): Revisa la estructura de los datos.";
+                return $" Error en el servidor (Código {(int)response.StatusCode}): Revisa la estructura de los datos.";
             }
 
             return respuestaTexto;
@@ -45,9 +45,9 @@ namespace ServicioFrontend.Services
             {
                 if ((int)response.StatusCode == 400)
                 {
-                    return "⚠️ Error de sintaxis o formato en el JSON de las Facturas (DTE). Asegúrate de incluir campos válidos como 'referencia', 'nitEmisor', 'nitReceptor', 'valor', 'iva' y 'total'.";
+                    return " Error de sintaxis o formato en el JSON de las Facturas (DTE). Asegúrate de incluir campos válidos como 'referencia', 'nitEmisor', 'nitReceptor', 'valor', 'iva' y 'total'.";
                 }
-                return $"❌ Error en el servidor (Código {(int)response.StatusCode}): Revisa los tipos de datos (números, fechas, textos).";
+                return $" Error en el servidor (Código {(int)response.StatusCode}): Revisa los tipos de datos (números, fechas, textos).";
             }
 
             return respuestaTexto;
@@ -70,7 +70,29 @@ namespace ServicioFrontend.Services
             var response = await _httpClient.PostAsync("api/sat/inicializar", null);
             if (!response.IsSuccessStatusCode)
             {
-                return "❌ Error al intentar inicializar el sistema.";
+                return " Error al intentar inicializar el sistema.";
+            }
+            return await response.Content.ReadAsStringAsync();
+        }
+
+        // Método para obtener el Resumen de IVA por fecha
+        public async Task<string> ObtenerResumenIvaAsync(string fecha)
+        {
+            var response = await _httpClient.GetAsync($"api/sat/resumen-iva?fecha={fecha}");
+            if (!response.IsSuccessStatusCode)
+            {
+                return "[]";
+            }
+            return await response.Content.ReadAsStringAsync();
+        }
+
+        // Método para obtener el Resumen por Rango de Fechas
+        public async Task<string> ObtenerResumenRangoAsync(string fechaInicio, string fechaFin, string modo)
+        {
+            var response = await _httpClient.GetAsync($"api/sat/resumen-rango?fechaInicio={fechaInicio}&fechaFin={fechaFin}&modo={modo}");
+            if (!response.IsSuccessStatusCode)
+            {
+                return "[]";
             }
             return await response.Content.ReadAsStringAsync();
         }

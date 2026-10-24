@@ -3,13 +3,16 @@ using System.Text.Json.Serialization;
 
 public class Factura
 {
-    private string fecha;
-    private string referencia;
-    private string nitEmisor;
-    private string nitReceptor;
+    private string fecha = "";
+    private string referencia = "";
+    private string nitEmisor = "";
+    private string nitReceptor = "";
     private decimal valor;
     private decimal iva;
     private decimal total;
+
+    // Constructor vacío indispensable para la deserialización JSON
+    public Factura() { }
 
     public Factura(string fecha, string referencia, string nitEmisor, string nitReceptor, decimal valor, decimal iva, decimal total)
     {
@@ -36,14 +39,26 @@ public class Factura
         set { referencia = value; } 
     }
 
+    // Soporte tanto para "NIT EMISOR" como para "NIT_EMISOR"
     [JsonPropertyName("NIT EMISOR")]
+    public string NitEmisorEspacio { set { nitEmisor = value; } }
+
+    [JsonPropertyName("NIT_EMISOR")]
+    public string NitEmisorGuion { set { nitEmisor = value; } }
+
     public string NitEmisor 
     { 
         get { return nitEmisor; } 
         set { nitEmisor = value; } 
     }
 
+    // Soporte tanto para "NIT RECEPTOR" como para "NIT_RECEPTOR"
     [JsonPropertyName("NIT RECEPTOR")]
+    public string NitReceptorEspacio { set { nitReceptor = value; } }
+
+    [JsonPropertyName("NIT_RECEPTOR")]
+    public string NitReceptorGuion { set { nitReceptor = value; } }
+
     public string NitReceptor 
     { 
         get { return nitReceptor; } 

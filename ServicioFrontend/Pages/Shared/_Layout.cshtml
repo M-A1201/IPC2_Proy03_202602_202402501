@@ -23,16 +23,25 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
+                        </li> -->
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Consultas">Consultas</a>
                         </li>
-                        <!-- Nuevo enlace de Ayuda integrado para la Release 4 -->
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/ResumenIva">Resumen IVA</a>
+                        </li>
+                    
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/ResumenRango">Resumen Rango</a>
+                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Ayuda">Ayuda</a>
                         </li>
+
+
                     </ul>
                 </div>
             </div>
@@ -49,6 +58,13 @@
             &copy; 2026 - ServicioFrontend - <a asp-area="" asp-page="/Privacy">Privacy</a>
         </div>
     </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+<!-- CDN de Chart.js para las gráficas estadísticas -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

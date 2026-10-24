@@ -1,0 +1,124 @@
+@page
+@model ResumenIvaModel
+@{
+    ViewData["Title"] = "Resumen de IVA";
+}
+
+<div class="text-center mb-4">
+    <h1 class="display-4">Resumen de IVA por Fecha y NIT</h1>
+    <p class="text-muted">Desglose de IVA emitido y recibido agrupado por contribuyente en una fecha específica.</p>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card p-4 shadow-sm border-0 bg-light">
+            <h5 class="card-title mb-3">Filtrar por Fecha</h5>
+            <form method="post">
+                <div class="mb-3">
+                    <label for="Fecha" class="form-label"><strong>Fecha (dd/mm/yyyy):</strong></label>
+                    <input asp-for="Fecha" class="form-control" placeholder="Ej. 15/01/2025" />
+                </div>
+                <button type="submit" asp-page-handler="Consultar" class="btn btn-primary w-100 fw-bold mb-2">
+                     Generar Resumen
+                </button>
+            </form>
+            @if (Model.ListaResumen.Count > 0)
+            {
+                <button onclick="window.print();" class="btn btn-outline-secondary w-100 fw-bold mt-2">
+                     Exportar / Imprimir PDF
+                </button>
+            }
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <h5 class="mb-3">Resultados del IVA por NIT</h5>
+
+        @if (!string.IsNullOrEmpty(Model.MensajeError))
+        {
+            <div class="alert alert-warning">@Model.MensajeError</div>
+        }
+        else if (Model.BusquedaRealizada)
+        {
+            @if (Model.ListaResumen.Count > 0)
+            {
+                <!-- Sección de la Gráfica Estadistica -->
+                <div class="card p-3 shadow-sm border-0 mb-4">
+                    <canvas id="graficaIva" style="max-height: 300px;"></canvas>
+                </div>
+
+                <div class="table-responsive card shadow-sm border-0">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>NIT Contribuyente</th>
+                                <th class="text-end">IVA Emitido</th>
+                                <th class="text-end">IVA Recibido</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.ListaResumen)
+                            {
+                                <tr>
+                                    <td><span class="badge bg-secondary">@item.Nit</span></td>
+                                    <td class="text-end text-success fw-bold">Q @item.IvaEmitido.ToString("N2")</td>
+                                    <td class="text-end text-info fw-bold">Q @item.IvaRecibido.ToString("N2")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                @section Scripts {
+                    <script>
+                        const ctx = document.getElementById('graficaIva').getContext('2d');
+                        const nits = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ListaResumen.Select(x => x.Nit)));
+                        const emitido = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ListaResumen.Select(x => x.IvaEmitido)));
+                        const recibido = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ListaResumen.Select(x => x.IvaRecibido)));
+
+                        new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: nits,
+                                datasets: [
+                                    {
+                                        label: 'IVA Emitido (Q)',
+                                        data: emitido,
+                                        backgroundColor: 'rgba(40, 167, 69, 0.7)',
+                                        borderColor: 'rgba(40, 167, 69, 1)',
+                                        borderWidth: 1
+                                    },
+                                    {
+                                        label: 'IVA Recibido (Q)',
+                                        data: recibido,
+                                        backgroundColor: 'rgba(23, 162, 184, 0.7)',
+                                        borderColor: 'rgba(23, 162, 184, 1)',
+                                        borderWidth: 1
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                scales: {
+                                    y: { beginAtZero: true }
+                                }
+                            }
+                        });
+                    </script>
+                }
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    No se encontraron registros de IVA para la fecha <strong>@Model.Fecha</strong>.
+                </div>
+            }
+        }
+        else
+        {
+            <div class="card p-4 text-center text-muted border-0 bg-light">
+                <p class="mb-0">Ingresa una fecha para consultar el resumen de IVA por NIT y ver su gráfica estadística.</p>
+            </div>
+        }
+    </div>
+</div>

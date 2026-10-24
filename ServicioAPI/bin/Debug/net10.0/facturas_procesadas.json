@@ -1,0 +1,10 @@
+{
+  "resultadoAutorizaciones": {
+    "cantidadAutorizacionesAprobadas": 0,
+    "cantidadAutorizacionesRechazadasPorNitEmisorInexistente": 2,
+    "cantidadAutorizacionesRechazadasPorNitReceptorInexistente": 1,
+    "detalleAprobaciones": [
+
+    ]
+  }
+}

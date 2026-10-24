@@ -32,3 +32,5 @@ C:\Users\Manuel\Desktop\Practicas,Proyecto de IPC2\Proyectos\IPC2_Proy03_202602_
 C:\Users\Manuel\Desktop\Practicas,Proyecto de IPC2\Proyectos\IPC2_Proy03_202602_202402501\ServicioAPI\obj\Debug\net10.0\ServicioAPI.pdb
 C:\Users\Manuel\Desktop\Practicas,Proyecto de IPC2\Proyectos\IPC2_Proy03_202602_202402501\ServicioAPI\obj\Debug\net10.0\ServicioAPI.genruntimeconfig.cache
 C:\Users\Manuel\Desktop\Practicas,Proyecto de IPC2\Proyectos\IPC2_Proy03_202602_202402501\ServicioAPI\obj\Debug\net10.0\ref\ServicioAPI.dll
+C:\Users\Manuel\Desktop\Practicas,Proyecto de IPC2\Proyectos\IPC2_Proy03_202602_202402501\ServicioAPI\bin\Debug\net10.0\facturas_procesadas.json
+C:\Users\Manuel\Desktop\Practicas,Proyecto de IPC2\Proyectos\IPC2_Proy03_202602_202402501\ServicioAPI\bin\Debug\net10.0\rtu_datos.json
